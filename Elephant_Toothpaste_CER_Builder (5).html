@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f5">
+  <title>Elephant Toothpaste CER Builder</title>
+  <style>
+    :root{color-scheme:light;--ink:#1c2d37;--muted:#65757c;--line:#dfe8e5;--green:#146b5a;--green-deep:#125347;--mint:#e5f4ee;--purple:#5849a4;--lavender:#f0edfc;--cream:#fff8e7;--bg:#f5f7f5;--white:#fff;--shadow:0 9px 28px rgba(24,56,47,.055)}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+    button,textarea{font:inherit}button{cursor:pointer}button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #8b7af3;outline-offset:3px}
+    .topbar{height:60px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100vw - 1450px)/2));gap:16px}
+    .brand{display:flex;align-items:center;gap:11px;min-width:0}.brand-icon{display:grid;place-items:center;width:36px;height:36px;background:var(--green);color:white;border-radius:11px;flex:none}
+    .brand-text{font-weight:800;letter-spacing:-.025em;font-size:15px;line-height:1.1}.brand-text small{display:block;color:#71827f;font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;margin-top:4px}
+    .top-actions{display:flex;align-items:center;gap:9px}.top-button{background:#fff;border:1px solid #d9e4df;border-radius:9px;padding:8px 11px;color:#3e5350;font-weight:700;font-size:12px;white-space:nowrap}.top-button:hover{background:#f2f8f5;border-color:#adc9bd}.language{color:var(--green);border-color:#bdd9cc}
+    .shell{max-width:1450px;margin:0 auto;padding:22px 24px 24px}.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:16px}
+    .eyebrow{font-weight:800;text-transform:uppercase;letter-spacing:.13em;font-size:10px;color:#6e8a7b;margin:0 0 5px}.intro h1{font-size:clamp(24px,2.35vw,31px);letter-spacing:-.045em;line-height:1.12;margin:0;color:#183b33}.intro p{font-size:13px;color:#687e75;margin:7px 0 0}.save-status{font-size:11px;font-weight:650;color:#56806f;display:flex;align-items:center;gap:6px;white-space:nowrap;padding-bottom:3px}.save-status::before{content:"";width:7px;height:7px;border-radius:50%;background:#48a47d}.save-status.warning{color:#a15138;white-space:normal;max-width:265px}.save-status.warning::before{background:#dc8a4e;flex:none}
+    .mission{display:flex;align-items:center;gap:14px;padding:13px 16px;background:#e6f2e9;border:1px solid #d8eada;border-radius:13px;margin-bottom:16px}.mission-icon{width:35px;height:35px;border-radius:10px;display:grid;place-items:center;background:#fff;color:var(--green);flex:none}.mission p{margin:0;font-size:15px;font-weight:750;line-height:1.35;color:#25463d}.mission small{display:block;color:#5c806d;font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;margin-bottom:3px}
+    .workspace{display:grid;grid-template-columns:minmax(0,1.13fr) minmax(360px,.87fr);gap:16px;align-items:stretch}.card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+    .writing-card{padding:21px 23px 18px;min-width:0;display:flex;flex-direction:column;min-height:470px}.question-nav{display:flex;align-items:center;gap:8px}.question-nav-label{font-size:11px;text-transform:uppercase;letter-spacing:.11em;color:#73847f;font-weight:800;white-space:nowrap;margin-right:auto}.step-list{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.step{width:31px;height:31px;border-radius:50%;border:1px solid #dae6df;color:#7b8d84;background:#f7faf8;font-size:12px;font-weight:800;display:grid;place-items:center}.step:hover{border-color:#8db7a5;color:var(--green)}.step.done{background:#e4f4eb;color:#257959;border-color:#cae7d5}.step.active{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 0 0 3px #dbf0e4}
+    .divider{height:1px;background:#edf2ef;margin:18px 0}.step-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.step-kicker{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:850;color:var(--green)}.step-tag{font-size:10px;font-weight:800;color:#7663aa;background:#f1eefd;padding:4px 7px;border-radius:6px}
+    .question-title{font-size:clamp(21px,2vw,28px);line-height:1.22;letter-spacing:-.035em;margin:11px 0 7px;color:#203a32;max-width:700px}.question-help{font-size:14px;line-height:1.45;color:#667974;margin:0 0 17px;max-width:690px}
+    .fields{display:grid;gap:12px}.field-label{display:block;font-size:12px;font-weight:800;color:#36564b;margin-bottom:6px}.field-hint{font-weight:500;color:#80918b}.field textarea{display:block;width:100%;border:1.5px solid #dce8e2;border-radius:11px;background:#fbfdfb;padding:12px 13px;min-height:126px;max-height:30vh;resize:vertical;line-height:1.45;color:#233d34;font-size:15px}.field textarea::placeholder{color:#a2b0aa}.field textarea:focus{background:#fff;border-color:#79b49a;outline:3px solid #d9f1e5;outline-offset:0}.field.source-field textarea{min-height:70px;max-height:15vh}
+    details.starter{background:#fbfaf5;border:1px solid #f1ecdc;border-radius:10px;margin-top:14px;color:#6c603e}.starter summary{list-style:none;padding:10px 12px;font-size:12px;font-weight:750;cursor:pointer;display:flex;align-items:center;gap:8px}.starter summary::-webkit-details-marker{display:none}.starter summary::after{content:"+";font-size:17px;margin-left:auto;line-height:1;color:#a8915b}.starter[open] summary::after{content:"−"}.starter ul{margin:0;padding:0 15px 11px 33px;line-height:1.5;font-size:12px;color:#77694a}
+    .navigation{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:auto;padding-top:18px}.nav-btn{border:1px solid #dce7e1;background:#fff;border-radius:10px;padding:10px 15px;font-weight:800;font-size:13px;color:#48635a;min-height:41px}.nav-btn:hover:not(:disabled){background:#f2f8f4}.nav-btn:disabled{opacity:.4;cursor:default}.nav-btn.primary{border-color:var(--green);background:var(--green);color:#fff;min-width:148px}.nav-btn.primary:hover{background:var(--green-deep)}.nav-arrow{margin:0 2px}.nav-tip{color:#94a59d;font-size:11px;text-align:center}
+    .sidebar{display:flex;flex-direction:column;gap:13px;min-width:0}.checklist-card{padding:17px 19px 14px}.card-head{display:flex;align-items:center;gap:10px}.heading-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;flex:none}.heading-icon.green{background:var(--mint);color:var(--green)}.heading-icon.purple{background:var(--lavender);color:var(--purple)}.head-copy{min-width:0}.head-copy h2{font-size:15px;letter-spacing:-.025em;margin:0;line-height:1.2}.head-copy p{font-size:11px;color:#819088;margin:4px 0 0;line-height:1.25}.head-badge{margin-left:auto;color:#37755f;background:#eff8f1;border-radius:20px;padding:5px 8px;font-size:10px;font-weight:800;white-space:nowrap}
+    .checklist{display:grid;gap:3px;margin-top:11px}.check-item{width:100%;display:flex;align-items:center;gap:9px;padding:6px 7px;border:1px solid transparent;border-radius:8px;background:transparent;text-align:left;color:#435a51}.check-item:hover{background:#f6faf7}.check-item.related{border-color:#e4ede7;background:#f8fbf8}.check-item.done{color:#2a6650}.check-icon{width:20px;height:20px;border-radius:50%;border:1.5px solid #cbdad1;background:#fff;display:grid;place-items:center;flex:none;font-size:12px;font-weight:900;color:transparent}.check-item.done .check-icon{background:#368d68;border-color:#368d68;color:white}.check-text{font-size:12px;font-weight:700;line-height:1.3;flex:1}.check-count{font-size:10px;font-weight:800;color:#97a79f;white-space:nowrap}.check-item.done .check-count{color:#5a997c}
+    .check-note{font-size:10px;line-height:1.35;color:#8a9891;margin:9px 1px 0}.preview-card{padding:17px 19px 15px;display:flex;flex-direction:column;flex:1;min-height:220px;min-width:0}.preview-text{line-height:1.65;font-size:14px;color:#394d47;padding:13px 14px;border:1px solid #e9e7f1;background:#faf9fe;border-radius:10px;margin:12px 0 12px;min-height:94px;max-height:24vh;overflow:auto;overflow-wrap:anywhere}.preview-empty{color:#a0a4ae;font-size:13px;line-height:1.5;margin:0}.answer-piece{all:unset;cursor:pointer;white-space:pre-wrap;border-radius:3px}.answer-piece:hover{background:#e9e4fd}.answer-piece.selected{background:#ebe8fb;box-shadow:0 0 0 2px #ebe8fb}.answer-piece:focus-visible{outline:2px solid #8b7af3;outline-offset:2px}
+    .preview-actions{display:flex;align-items:center;gap:10px;margin-top:auto}.copy-btn{border:0;border-radius:9px;background:var(--purple);color:#fff;padding:10px 14px;min-height:39px;font-size:12px;font-weight:800;white-space:nowrap}.copy-btn:hover:not(:disabled){background:#493987}.copy-btn:disabled{opacity:.4;cursor:default}.copy-message{font-size:11px;line-height:1.3;color:#728278}.copy-message.success{color:#278158;font-weight:700}.copy-message.error{color:#a44735;font-weight:700}
+    .privacy-foot{margin:12px 0 0;font-size:10px;line-height:1.35;color:#9aaba2;text-align:center}
+    @media(max-width:950px){.shell{padding:18px}.workspace{grid-template-columns:minmax(0,1fr) minmax(315px,.8fr)}.writing-card{padding:19px}.topbar{padding:0 18px}.question-title{font-size:23px}.question-nav-label{display:none}.step-list{justify-content:flex-start}.nav-tip{display:none}}
+    @media(max-height:800px) and (min-width:721px){.topbar{height:51px}.shell{padding-top:12px;padding-bottom:12px}.intro{margin-bottom:9px}.intro h1{font-size:24px}.intro p{margin-top:4px}.mission{padding:8px 13px;margin-bottom:10px}.mission-icon{height:30px;width:30px}.writing-card{padding:15px 19px;min-height:0}.divider{margin:10px 0}.question-title{font-size:23px;margin:8px 0 5px}.question-help{margin-bottom:10px}.fields{gap:8px}.field textarea{min-height:90px}.field.source-field textarea{min-height:54px}.starter{margin-top:8px!important}.starter summary{padding:7px 11px}.navigation{padding-top:11px}.checklist-card,.preview-card{padding:12px 16px}.checklist{margin-top:7px}.check-item{padding:4px 6px}.check-note{margin-top:5px}.preview-card{min-height:165px}.preview-text{margin:8px 0;min-height:76px;max-height:20vh}.privacy-foot{margin-top:7px}}
+    @media(max-width:720px){.topbar{height:auto;min-height:58px;padding:10px 14px}.brand-text small{font-size:9px}.top-button{padding:8px}.shell{padding:15px 12px 22px}.intro{align-items:flex-start}.intro h1{font-size:25px}.intro p{line-height:1.35}.save-status{white-space:normal;text-align:right;max-width:150px;line-height:1.25}.mission{padding:11px}.mission p{font-size:14px}.workspace{grid-template-columns:1fr}.writing-card{min-height:0;padding:18px}.sidebar{display:grid;gap:13px}.preview-text{max-height:45vh}.checklist-card,.preview-card{padding:16px}.question-title{font-size:23px}.field textarea{max-height:45vh}.field.source-field textarea{max-height:30vh}.navigation{padding-top:16px}}
+    @media(max-width:400px){.brand-text{font-size:13px}.brand-text small{font-size:8px}.top-actions{gap:5px}.top-button{font-size:11px;padding:7px}.step{width:29px;height:29px}.step-list{gap:5px}.mission-icon{display:none}.nav-btn.primary{min-width:0}.nav-btn{padding:10px 12px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+    /* A compact workspace keeps the question, checklist and draft visible. */
+    .shell{max-width:none;padding:10px 14px 14px}
+    .mission{margin-bottom:10px;padding:10px 14px;gap:12px}
+    .mission-copy{flex:1;min-width:0}
+    .mission p{font-size:clamp(15px,1.35vw,19px)}
+    .mission-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+    .mission-controls .top-button{min-height:36px}
+    .mission-controls .save-status{padding:0 4px 0 0}
+    .workspace{grid-template-columns:minmax(0,1.1fr) minmax(360px,.9fr);min-height:calc(100dvh - 108px);gap:10px}
+    .writing-card{padding:18px 21px;min-height:0}
+    .sidebar{gap:10px;min-height:0}
+    .checklist-card,.preview-card{padding:15px 18px}
+    .check-text{font-size:14px}
+    .question-title{font-size:clamp(23px,2.15vw,30px)}
+    .question-help{font-size:16px}
+    .fields{display:flex;flex-direction:column;flex:1;min-height:0;gap:10px}
+    .field{display:flex;flex-direction:column;flex:1;min-height:110px}
+    .field.source-field{flex:.6;min-height:82px}
+    .field textarea{flex:1;max-height:none;font-size:16px;min-height:100px}
+    .field.source-field textarea{flex:1;max-height:none;min-height:60px}
+    .preview-card{flex:1;min-height:190px}
+    .preview-text{flex:1;min-height:105px;max-height:none;font-size:15px}
+    .privacy-foot{margin-top:6px}
+    .step-meta{gap:8px}
+    .step-meta .step-list{justify-content:flex-start}
+    .read-btn{margin-left:auto}
+    .tool-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:7px 10px;border-radius:9px;border:1px solid #bdd9cc;background:#f7fcf9;color:#145b4b;font-weight:800;font-size:12px;line-height:1.1}
+    .tool-btn:hover:not(:disabled){background:#e5f5eb}
+    .tool-btn:disabled{opacity:.55;cursor:not-allowed}
+    .tool-btn.listening{border-color:#dc6f60;background:#fff0ed;color:#9c3027}
+    .tool-btn.reading{border-color:#8f80d4;background:#eeeafb;color:#514193}
+    .starter{background:#fbfaf5;border:1px solid #f1ecdc;border-radius:10px;margin:0 0 10px!important;color:#6c603e}
+    .starter-head{padding:7px 10px 3px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:750}
+    .starter-head .tool-btn{margin-left:auto;min-height:30px}
+    .starter ul{margin:0;padding:0 15px 8px 31px;line-height:1.4;font-size:12px;color:#77694a}
+    .field-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+    .field-top .field-label{margin:0}
+    .voice-note{font-size:10px;color:#6b7c75;margin:5px 1px 0;line-height:1.3}
+    .voice-status{font-size:12px;color:#257255;min-height:0;margin-top:4px;line-height:1.3}
+    .voice-status.error{color:#a13d2c}
+    .voice-setup{margin-top:6px;font-size:12px}
+    .voice-setup[hidden]{display:none}
+    .check-indicators{display:flex;align-items:center;gap:3px;flex:none}
+    .check-icon.checked{background:#368d68;border-color:#368d68;color:#fff}
+    .check-text{min-width:0}
+    .validation{margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid #e5bd79;background:#fff8e9;color:#634a21}
+    .validation[hidden]{display:none}
+    .validation-title{font-weight:850;font-size:13px}
+    .validation p{font-size:13px;line-height:1.35;margin:5px 0}
+    .validation-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
+    .validation-actions button{font:inherit;font-size:12px;font-weight:800;border:1px solid #dec08b;border-radius:8px;background:white;color:#674b20;padding:6px 9px;cursor:pointer}
+    .validation-actions button:hover{background:#fff2d6}
+    .validation-note{font-size:10px!important;color:#8c744d}
+    .field textarea[aria-invalid="true"]{border-color:#c74d3b;box-shadow:0 0 0 3px #fbe2da}
+    .field textarea.shake-answer{animation:shake-answer .55s ease-in-out}
+    .check-item.pulse{animation:check-row 1.05s ease-out}
+    .check-icon.just-checked{animation:check-pop 1.05s ease-out}
+    .check-item.pulse .check-count{animation:count-pop 1.05s ease-out}
+    .answer-piece.reveal{animation:answer-in 1.25s ease-out}
+    .preview-card.argument-arrived{animation:argument-glow 1.25s ease-out}
+    @keyframes check-row{0%{background:#f8fbf8}35%,70%{background:#d8f4e3;box-shadow:0 0 0 3px #c7ebd5}100%{background:transparent;box-shadow:none}}
+    @keyframes check-pop{0%{transform:scale(.85)}35%,65%{transform:scale(1.35);box-shadow:0 0 0 7px #c5efd3}100%{transform:scale(1);box-shadow:none}}
+    @keyframes count-pop{0%{transform:scale(1)}35%,65%{color:#146b5a;transform:scale(1.25)}100%{transform:scale(1)}}
+    @keyframes answer-in{0%,35%{background:#fff0a8;box-shadow:0 0 0 4px #fff0a8}100%{background:transparent;box-shadow:none}}
+    @keyframes argument-glow{0%,35%{border-color:#8f7ddd;box-shadow:0 0 0 5px #e3dcff,0 8px 25px rgba(88,73,164,.2)}100%{border-color:var(--line);box-shadow:var(--shadow)}}
+    @keyframes shake-answer{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+    @media(max-height:800px) and (min-width:721px){
+      .shell{padding:8px 12px 10px}
+      .mission{padding:7px 12px;margin-bottom:8px}
+      .workspace{min-height:calc(100dvh - 90px);gap:9px}
+      .writing-card{padding:13px 17px}
+      .checklist-card,.preview-card{padding:11px 15px}
+      .preview-text{max-height:none}
+      .field textarea{min-height:82px}
+      .field.source-field textarea{min-height:50px}
+      .voice-note{margin-top:3px}
+    }
+    @media(max-width:720px){
+      .shell{padding:10px 10px 18px}
+      .mission{align-items:flex-start;flex-wrap:wrap}
+      .mission-controls{margin-left:auto}
+      .mission-controls .save-status{width:100%;justify-content:flex-end;max-width:none}
+      .workspace{grid-template-columns:1fr;min-height:0}
+      .preview-text{max-height:45vh}
+      .read-btn{margin-left:auto}
+    }
+    @media(max-width:400px){.mission-controls .save-status{font-size:10px}.tool-btn{font-size:11px;padding:6px 8px}}
+    @media(max-width:1100px){.step-meta .step{width:27px;height:27px}.step-meta .step-list{gap:4px}}
+    @media (min-width:721px) and (max-width:1050px){.check-icon{width:17px;height:17px;font-size:10px}.check-item{gap:5px}.check-text{font-size:12px}}
+    @media (min-width:721px) and (max-width:900px){.step-meta .step-tag{display:none}}
+    @media(max-width:480px){.step-meta .step-tag{display:none}.step-meta .step{width:25px;height:25px}.step-meta .step-list{gap:3px}}
+    @media(prefers-reduced-motion:reduce){.check-item.pulse,.check-icon.just-checked,.check-item.pulse .check-count,.answer-piece.reveal,.preview-card.argument-arrived,.field textarea.shake-answer{animation:none}}
+
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="mission" aria-label="Assignment question">
+      <span class="mission-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 8.3a4 4 0 1 1 6.6 3.1c-1.3 1.1-2.6 1.6-2.6 3.4M12 18.4h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.6"/></svg></span>
+      <div class="mission-copy"><small data-i18n="missionLabel">Your question</small><p data-i18n="mission">What is one gas that could be the elephant toothpaste gas?</p></div>
+      <div class="mission-controls">
+        <span id="saveStatus" class="save-status" role="status" aria-live="polite"></span>
+        <button type="button" class="top-button language" id="languageBtn" lang="es" aria-label="Cambiar a español">Español</button>
+        <button type="button" class="top-button" id="resetBtn" data-i18n="reset">Start over</button>
+      </div>
+    </section>
+    <div class="workspace">
+      <section class="card writing-card" aria-labelledby="questionTitle">
+        <div class="step-meta"><nav class="step-list" id="stepList" aria-label="Questions"></nav><span class="step-tag" id="stepTag"></span><button type="button" class="tool-btn read-btn" id="speakQuestionBtn" aria-pressed="false">🔊 Read question</button></div>
+        <h2 class="question-title" id="questionTitle"></h2>
+        <p class="question-help" id="questionHelp"></p>
+        <section class="starter" id="starter" aria-labelledby="starterTitle">
+          <div class="starter-head"><span id="starterTitle" data-i18n="starter">Optional sentence starters</span><button type="button" class="tool-btn" id="speakStartersBtn" aria-pressed="false">🔊 Read starters</button></div>
+          <ul id="starterList"></ul>
+        </section>
+        <div id="fields" class="fields"></div>
+        <p class="voice-note" id="voicePrivacy"></p>
+        <div id="validation" class="validation" role="alert" hidden>
+          <div class="validation-title" id="validationTitle"></div>
+          <p id="validationText"></p>
+        </div>
+        <div class="navigation"><button type="button" class="nav-btn" id="previousBtn"></button><span class="nav-tip" data-i18n="navTip">You can go back and edit.</span><button type="button" class="nav-btn primary" id="nextBtn"></button></div>
+      </section>
+      <aside class="sidebar" aria-label="Checklist and argument">
+        <section class="card checklist-card" aria-labelledby="checklistTitle">
+          <div class="card-head"><span class="heading-icon green" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="4.5" y="4.5" width="15" height="15" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="m8 12 2.5 2.5L16 9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="head-copy"><h2 id="checklistTitle" data-i18n="checklistTitle">Your CER checklist</h2><p data-i18n="checklistSub">See how your answers come together</p></div><span class="head-badge" id="checklistBadge"></span></div>
+          <div class="checklist" id="checklist"></div>
+          <p class="check-note" data-i18n="checkNote">A check means you wrote an answer. Make sure your ideas are correct and complete.</p>
+        </section>
+        <section class="card preview-card" id="previewCard" aria-labelledby="previewTitle" tabindex="-1">
+          <div class="card-head"><span class="heading-icon purple" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M7 4.5h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7"/><path d="M8 9h8M8 12.5h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><div class="head-copy"><h2 id="previewTitle" data-i18n="previewTitle">Your argument</h2><p data-i18n="previewSub">Click any answer to go back and edit it.</p></div></div>
+          <div class="preview-text" id="previewText"></div>
+          <div class="preview-actions"><button type="button" class="copy-btn" id="copyBtn" data-i18n="copy">Copy my CER</button><button type="button" class="tool-btn" id="speakArgumentBtn" aria-pressed="false">🔊 Read argument</button><span class="copy-message" id="copyMessage" role="status" aria-live="polite"></span></div>
+        </section>
+      </aside>
+    </div>
+    <p class="privacy-foot" data-i18n="privacy">Your work stays in this browser. On a shared device, use Start over when you finish.</p>
+  </main>
+  <script>
+  (() => {
+    'use strict';
+    const STORAGE_KEY = 'elephant-toothpaste-cer-v1';
+    const fieldOrder = ['claim','flameResult','experimentSource','flameChart','chartSource','flameReason','densityResult','densityChart','densityReason'];
+    const checklist = [
+      { id:'claim', fields:['claim'], en:'I answered the question with a claim.', es:'Respondí la pregunta con una afirmación.' },
+      { id:'evidence', fields:['flameResult','flameChart','densityResult','densityChart'], en:'I included the evidence I need.', es:'Incluí la evidencia que necesito.' },
+      { id:'sources', fields:['experimentSource','chartSource'], en:'I said where I found my evidence.', es:'Dije dónde encontré mi evidencia.' },
+      { id:'science', fields:['densityReason'], en:'I used a science idea to explain my evidence.', es:'Usé una idea científica para explicar mi evidencia.' },
+      { id:'reasoning', fields:['flameReason','densityReason'], en:'I explained how my evidence supports my claim.', es:'Expliqué cómo mi evidencia apoya mi afirmación.' }
+    ];
+    const fieldNames = {
+      claim:{en:'Claim',es:'Afirmación'},
+      flameResult:{en:'Flame test observation',es:'Observación de la llama'},
+      flameChart:{en:'Gas chart: flame',es:'Tabla de gases: llama'},
+      densityResult:{en:'Density test observation',es:'Observación de densidad'},
+      densityChart:{en:'Gas chart: density',es:'Tabla de gases: densidad'},
+      experimentSource:{en:'Class results source',es:'Fuente de los resultados de clase'},
+      chartSource:{en:'Gas chart source',es:'Fuente de la tabla de gases'},
+      flameReason:{en:'Flame comparison',es:'Comparación de la llama'},
+      densityReason:{en:'Density explanation',es:'Explicación de la densidad'}
+    };
+    const steps = [
+      {tag:{en:'CLAIM',es:'AFIRMACIÓN'}, fields:[{key:'claim'}],
+       en:{title:'What gas could the elephant toothpaste gas be?',help:'Give your answer in a complete sentence.',starters:['I think the elephant toothpaste gas could be…','One gas that could be present is…']},
+       es:{title:'¿Qué gas podría ser el gas de la pasta de dientes de elefante?',help:'Escribe tu respuesta en una oración completa.',starters:['Pienso que el gas podría ser…','Un gas que podría estar presente es…']}},
+      {tag:{en:'EVIDENCE · FLAME TEST',es:'EVIDENCIA · PRUEBA DE LLAMA'}, fields:[{key:'flameResult'},{key:'experimentSource',source:true}],
+       en:{title:'What happened to the flame in our test?',help:'Describe what you observed. Then tell where you found the class results.',label:'What happened?',sourceLabel:'Where can you find the class results?',starters:['During our flame test, I observed…','I found the results in…']},
+       es:{title:'¿Qué le pasó a la llama durante nuestra prueba?',help:'Describe lo que observaste. Luego di dónde encontraste los resultados de la clase.',label:'¿Qué pasó?',sourceLabel:'¿Dónde puedes encontrar los resultados de la clase?',starters:['Durante la prueba de la llama, observé…','Encontré los resultados en…']}},
+      {tag:{en:'EVIDENCE · GAS CHART',es:'EVIDENCIA · TABLA DE GASES'}, fields:[{key:'flameChart'},{key:'chartSource',source:true}],
+       en:{title:'What does the chart say your gas does to a flame?',help:'Describe your gas’s flame behavior. Then tell where you found the chart.',label:'What does the chart say?',sourceLabel:'Where can you find the chart?',starters:['The gas chart says that my gas…','I found the chart in…']},
+       es:{title:'Según la tabla, ¿qué le hace tu gas a una llama?',help:'Describe el efecto de tu gas sobre la llama. Luego di dónde encontraste la tabla.',label:'¿Qué dice la tabla?',sourceLabel:'¿Dónde puedes encontrar la tabla?',starters:['La tabla de gases dice que mi gas…','Encontré la tabla en…']}},
+      {tag:{en:'REASONING · FLAME',es:'RAZONAMIENTO · LLAMA'}, fields:[{key:'flameReason'}],
+       en:{title:'How do the flame results compare?',help:'Compare our test result with what the chart says about your gas. What does the match or difference mean for your claim?',starters:['The flame result and the chart compare because…','This evidence affects my claim because…']},
+       es:{title:'¿Cómo se comparan los resultados de la llama?',help:'Compara nuestro resultado con lo que dice la tabla sobre tu gas. ¿Qué significa la semejanza o diferencia para tu afirmación?',starters:['El resultado de la llama y la tabla se comparan porque…','Esta evidencia afecta mi afirmación porque…']}},
+      {tag:{en:'EVIDENCE · DENSITY TEST',es:'EVIDENCIA · PRUEBA DE DENSIDAD'}, fields:[{key:'densityResult'}],
+       en:{title:'What happened in the density test?',help:'Describe how the elephant toothpaste gas moved in the air.',starters:['During the density test, I observed…','When we tested the gas in air…']},
+       es:{title:'¿Qué pasó durante la prueba de densidad?',help:'Describe cómo se movió el gas de la pasta de dientes de elefante en el aire.',starters:['Durante la prueba de densidad, observé…','Cuando probamos el gas en el aire…']}},
+      {tag:{en:'EVIDENCE · GAS CHART',es:'EVIDENCIA · TABLA DE GASES'}, fields:[{key:'densityChart'}],
+       en:{title:'How does your gas’s density compare with air?',help:'Use the information in the gas chart.',starters:['The gas chart shows that my gas has…','Compared with air, my gas is…']},
+       es:{title:'¿Cómo se compara la densidad de tu gas con la del aire?',help:'Usa la información de la tabla de gases.',starters:['La tabla de gases muestra que mi gas tiene…','Comparado con el aire, mi gas es…']}},
+      {tag:{en:'REASONING · DENSITY',es:'RAZONAMIENTO · DENSIDAD'}, fields:[{key:'densityReason'}],
+       en:{title:'What can density tell us about the gas?',help:'Explain why the gas moved that way in air. Then compare that result with the gas you chose.',starters:['A science idea that explains the gas’s movement is…','This result compares with the gas I chose because…']},
+       es:{title:'¿Qué nos dice la densidad sobre el gas?',help:'Explica por qué el gas se movió de esa manera en el aire. Luego compara ese resultado con el gas que elegiste.',starters:['Una idea científica que explica el movimiento del gas es…','Este resultado se compara con el gas que elegí porque…']}}
+    ];
+    const translations = {
+      en:{brand:'CER Builder',brandSub:'Science writing guide',reset:'Start over',eyebrow:'One step at a time',title:'Let’s build your argument.',intro:'Answer each question. Your words will come together as you write.',missionLabel:'Your question',mission:'What is one gas that could be the elephant toothpaste gas?',questionNav:'Your questions',starter:'Need a sentence starter?',navTip:'You can go back and edit.',checklistTitle:'Your CER checklist',checklistSub:'See how your answers come together',checkNote:'A check means you wrote an answer. Make sure your ideas are correct and complete.',previewTitle:'Your argument',previewSub:'Click any answer to go back and edit it.',copy:'Copy my CER',privacy:'Your work stays in this browser. On a shared device, use Start over when you finish.',answer:'Your answer',placeholder:'Write your answer here…',sourcePlaceholder:'Write a complete sentence…',question:'Question',of:'of',back:'← Back',next:'Next question →',review:'Review my argument →',answered:'answered',saved:'Saved in this browser',unsaved:'Saving is unavailable on this device.',empty:'Your answers will appear here as you write.',copyHint:'Copy, then paste it into your Google Form.',copied:'Copied! Paste it into your Google Form.',copyFailed:'Select your argument and press Ctrl+C to copy.',confirm:'Start over and erase the answers saved on this device?',languageLabel:'Cambiar a español',navLabel:'Questions',sideLabel:'Checklist and argument',missionAria:'Assignment question',edit:'Edit answer',allEmpty:'Your argument will appear here.'},
+      es:{brand:'Creador de CER',brandSub:'Guía de escritura científica',reset:'Empezar de nuevo',eyebrow:'Un paso a la vez',title:'Construyamos tu argumento.',intro:'Responde cada pregunta. Tus palabras se unirán mientras escribes.',missionLabel:'Tu pregunta',mission:'¿Qué gas podría ser el gas de la pasta de dientes de elefante?',questionNav:'Tus preguntas',starter:'¿Necesitas un inicio de oración?',navTip:'Puedes regresar y editar.',checklistTitle:'Tu lista de CER',checklistSub:'Mira cómo se unen tus respuestas',checkNote:'Una marca significa que escribiste una respuesta. Revisa que tus ideas sean correctas y completas.',previewTitle:'Tu argumento',previewSub:'Haz clic en una respuesta para editarla.',copy:'Copiar mi CER',privacy:'Tu trabajo queda en este navegador. En un dispositivo compartido, usa Empezar de nuevo al terminar.',answer:'Tu respuesta',placeholder:'Escribe tu respuesta aquí…',sourcePlaceholder:'Escribe una oración completa…',question:'Pregunta',of:'de',back:'← Atrás',next:'Siguiente pregunta →',review:'Revisar mi argumento →',answered:'respondidas',saved:'Guardado en este navegador',unsaved:'No se puede guardar en este dispositivo.',empty:'Tus respuestas aparecerán aquí mientras escribes.',copyHint:'Copia y pega tu CER en el Formulario de Google.',copied:'¡Copiado! Pégalo en tu Formulario de Google.',copyFailed:'Selecciona tu argumento y presiona Ctrl+C para copiarlo.',confirm:'¿Empezar de nuevo y borrar las respuestas guardadas en este dispositivo?',languageLabel:'Switch to English',navLabel:'Preguntas',sideLabel:'Lista y argumento',missionAria:'Pregunta de la actividad',edit:'Editar respuesta',allEmpty:'Tu argumento aparecerá aquí.'}
+    };
+    Object.assign(translations.en, {
+      checkNote:'Checks look for a few clues. They do not grade your science.',
+      checklistSub:'Each circle fills when you complete a part',
+      starter:'Optional sentence starters',
+      previewSub:'Answers appear after you continue. Click one to edit it.',
+      empty:'Your answers will appear here after you continue.',
+      privacy:'Typed answers stay in this browser. On a shared device, use Start over when you finish.',
+      readQuestion:'Read question', readStarters:'Read starters', readArgument:'Read argument', stopReading:'Stop reading',
+      readUnavailable:'Read aloud is unavailable in this browser.',
+      mic:'Voice typing', stopMic:'Stop listening', stopping:'Stopping…',
+      micUnavailable:'Voice typing is unavailable in this browser. Click the answer box and try Windows + H, or Chromebook Search/Launcher + D (turn on Dictation in Accessibility settings first).',
+      micListening:'Listening… Select Stop listening when you are finished.',
+      micStopped:'Voice typing stopped.',
+      micDenied:'Microphone access is blocked. Allow it in your browser or type your answer.',
+      micNoMic:'No microphone was found. Connect one or type your answer.',
+      micNoSpeech:'No speech was heard. Try again or type your answer.',
+      micNetwork:'The voice service could not connect. Click the answer box and try Windows + H, or Chromebook Search/Launcher + D (turn on Dictation in Accessibility settings first).',
+      micLocalRetry:'On-device voice typing is ready. Select Voice typing to try again.',
+      micLocalFailed:'On-device voice typing could not start. Select Voice typing to try the browser service, or use your device’s dictation.',
+      micLocalSetup:'Set up on-device voice typing (downloads a language pack)',
+      micLocalDownloading:'Downloading the voice language pack. This may take a few minutes…',
+      micLocalReady:'On-device voice typing is ready. Select Voice typing to start.',
+      micLocalSetupFailed:'The language pack could not be installed. Use your device’s dictation or type your answer.',
+      micError:'Voice typing stopped. Try again or type your answer.',
+      micPrivacy:'Voice typing may send audio to your browser’s speech service.',
+      micFirst:'Stop voice typing before continuing.',
+      readFirst:'Stop voice typing before reading aloud.',
+      checkTitle:'Let’s check your answer',
+      editAnswer:'Edit my answer', alreadyIncluded:'I included it — continue',
+      checkLimits:'This simple check can miss your meaning. If you included it, you can continue.',
+      emptyCheck:'Please answer this part before continuing.',
+      gasCheck:'Name the gas you are considering. The app does not check whether your gas is correct.',
+      claimSentenceCheck:'Write a complete sentence that tells which gas you think it could be.',
+      claimSentenceNote:'A gas name by itself is not a complete sentence.',
+      sentenceCheck:'Write a complete sentence. Say what happened or is true, using an action word like “was,” “got,” or “changed.”',
+      adding:'Adding your answer…',
+      flameCheck:'Describe what happened to the flame, such as how it changed.',
+      sourceCheck:'Tell where you found this information, such as a page, notebook, chart, or results sheet.',
+      comparisonCheck:'Explain how the results compare or why the evidence matters to your claim.',
+      movementCheck:'Describe how the gas moved in the air during the density test.',
+      densityCompareCheck:'Compare your gas’s density with air, or say whether it would sink or rise.',
+      densityIdeaCheck:'Include a science idea about density or how heavy the gas is compared with air.',
+      densityMovementCheck:'Explain how that idea relates to the gas sinking or rising.',
+      densityLinkCheck:'Compare the density result with the gas you chose.'
+    });
+    Object.assign(translations.es, {
+      checkNote:'Las marcas buscan algunas pistas. No califican tu ciencia.',
+      checklistSub:'Cada círculo se llena al completar una parte',
+      starter:'Inicios de oración opcionales',
+      previewSub:'Tus respuestas aparecen cuando continúas. Haz clic en una para editarla.',
+      empty:'Tus respuestas aparecerán aquí cuando continúes.',
+      privacy:'Las respuestas escritas quedan en este navegador. En un dispositivo compartido, usa Empezar de nuevo al terminar.',
+      readQuestion:'Leer pregunta', readStarters:'Leer inicios', readArgument:'Leer argumento', stopReading:'Dejar de leer',
+      readUnavailable:'La lectura en voz alta no está disponible en este navegador.',
+      mic:'Dictado por voz', stopMic:'Dejar de escuchar', stopping:'Deteniendo…',
+      micUnavailable:'El dictado por voz no está disponible en este navegador. Haz clic en la respuesta y prueba Windows + H o Chromebook Buscar/Lanzador + D (primero activa Dictado en Accesibilidad).',
+      micListening:'Escuchando… Elige Dejar de escuchar cuando termines.',
+      micStopped:'El dictado por voz se detuvo.',
+      micDenied:'El acceso al micrófono está bloqueado. Permítelo en el navegador o escribe tu respuesta.',
+      micNoMic:'No se encontró un micrófono. Conecta uno o escribe tu respuesta.',
+      micNoSpeech:'No se escuchó ninguna voz. Intenta otra vez o escribe tu respuesta.',
+      micNetwork:'El servicio de voz no pudo conectarse. Haz clic en la respuesta y prueba Windows + H o Chromebook Buscar/Lanzador + D (primero activa Dictado en Accesibilidad).',
+      micLocalRetry:'El dictado en el dispositivo está listo. Elige Dictado por voz para intentar otra vez.',
+      micLocalFailed:'No se pudo iniciar el dictado en el dispositivo. Elige Dictado por voz para probar el servicio del navegador o usa el dictado de tu dispositivo.',
+      micLocalSetup:'Preparar dictado en el dispositivo (descarga un paquete de idioma)',
+      micLocalDownloading:'Descargando el paquete de idioma. Puede tardar unos minutos…',
+      micLocalReady:'El dictado en el dispositivo está listo. Elige Dictado por voz para comenzar.',
+      micLocalSetupFailed:'No se pudo instalar el paquete de idioma. Usa el dictado de tu dispositivo o escribe tu respuesta.',
+      micError:'El dictado por voz se detuvo. Intenta otra vez o escribe tu respuesta.',
+      micPrivacy:'El dictado puede enviar audio al servicio de voz del navegador.',
+      micFirst:'Detén el dictado por voz antes de continuar.',
+      readFirst:'Detén el dictado por voz antes de leer en voz alta.',
+      checkTitle:'Revisemos tu respuesta',
+      editAnswer:'Editar mi respuesta', alreadyIncluded:'Ya lo incluí — continuar',
+      checkLimits:'Esta revisión sencilla puede no entenderte. Si ya lo incluiste, puedes continuar.',
+      emptyCheck:'Por favor responde esta parte antes de continuar.',
+      gasCheck:'Nombra el gas que estás considerando. La aplicación no revisa si tu gas es correcto.',
+      claimSentenceCheck:'Escribe una oración completa que diga qué gas piensas que podría ser.',
+      claimSentenceNote:'El nombre de un gas por sí solo no es una oración completa.',
+      sentenceCheck:'Escribe una oración completa. Di qué pasó o qué es cierto usando una palabra como “fue,” “es” o “cambió.”',
+      adding:'Agregando tu respuesta…',
+      flameCheck:'Describe qué pasó con la llama, por ejemplo, cómo cambió.',
+      sourceCheck:'Di dónde encontraste esta información, como una página, cuaderno, tabla u hoja de resultados.',
+      comparisonCheck:'Explica cómo se comparan los resultados o por qué la evidencia importa para tu afirmación.',
+      movementCheck:'Describe cómo se movió el gas en el aire durante la prueba de densidad.',
+      densityCompareCheck:'Compara la densidad de tu gas con el aire o di si se hundiría o subiría.',
+      densityIdeaCheck:'Incluye una idea científica sobre densidad o qué tan pesado es el gas comparado con el aire.',
+      densityMovementCheck:'Explica cómo esa idea se relaciona con que el gas se hunda o suba.',
+      densityLinkCheck:'Compara el resultado de densidad con el gas que elegiste.'
+    });
+
+    /* Checks look for content cues, not scientific correctness. */
+    function normalized(text) {
+      return String(text).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+    }
+    function editDistance(a,b) {
+      if(Math.abs(a.length-b.length)>2)return 3;
+      let prev=Array.from({length:b.length+1},(_,i)=>i);
+      for(let i=1;i<=a.length;i++){
+        const next=[i];
+        for(let j=1;j<=b.length;j++)next[j]=Math.min(next[j-1]+1,prev[j]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+        prev=next;
+      }
+      return prev[b.length];
+    }
+    const gasWords=['oxygen','oxigeno','oxigen','oxcygen','propane','propano','propene','propeno','methane','methen','metano','meten','hydrogen','hidrogeno','nitrogen','nitrogeno','helium','helio','argon','ammonia','amoniaco','butane','butano','ethane','etano','ozone','ozono','neon','aire','air','carbon','dioxide','dioxido','monoxide','monoxido','vapor','acetylene','acetileno','chlorine','cloro','krypton','xenon'];
+    function gasMention(text,excludeAir=false) {
+      const words=normalized(text).match(/[a-z0-9]+/g)||[];
+      return words.some(word=>gasWords.some(gas=>(!excludeAir||(gas!=='air'&&gas!=='aire'))&&(word===gas || (gas.length>=6 && word.length>=5 && editDistance(word,gas)<=1))) || /^(?:o2|h2|n2|co2|co|ch4|c3h8)$/.test(word));
+    }
+    const flameCue=/\b(?:bright\w*|bigg\w*|larg\w*|tall\w*|grow\w*|grew|ris\w*|rose|up|increas\w*|increse\w*|strong\w*|lit|light\w*|glow\w*|ember\w*|pop\w*|bang\w*|explo\w*|burst\w*|boom\w*|noise\w*|sound\w*|spark\w*|fireball\w*|burn\w*|combust\w*|ignit\w*|out|extingui\w*|flicker\w*|small\w*|stayed|same|unchang\w*|change\w*|brill\w*|aument\w*|grande\w*|crec\w*|fuerte\w*|chisp\w*|encend\w*|apag\w*|estall\w*|tron\w*|prend\w*|brasa\w*|mech\w*|sonido\w*|pequen\w*|aviv\w*|lumin\w*|subi\w*|sube\w*)\b/;
+    const sourceCue=/\b(?:pages?|pg|pags?|paginas?|sheet\w*|paper\w*|chart\w*|table\w*|notebook\w*|notes?|notas?|handout\w*|worksheet\w*|lab|book\w*|workbook\w*|journal\w*|document\w*|website\w*|video\w*|tabla\w*|cuadro\w*|hoja\w*|cuaderno\w*|libreta\w*|libro\w*|papel\w*|apuntes?|grafica\w*|documento\w*)\b|\b(?:on|in|at|en|de)\s+(?:p\.?\s*)?\d+\b/;
+    const comparisonCue=/\bboth\b|\bsame\b|\blike\b|\balso\b|\btoo\b|\bso\b|\bas\b|\bjust\b|similar|alike|match|compar|differ|fit\b|fits|support|because|since|therefore|means|mean\b|prove|connect|both|the way|correspond|igual|semejan|similar|coincid|compar|difer|porque|ya que|por eso|por lo tanto|significa|apoya|ambos|ambas|los dos|las dos|tambien|corresponde|coherente|encaja|mism/;
+    const densityLinkCue=/\bboth\b|\bsame\b|\blike\b|\balso\b|\btoo\b|similar|alike|match|compar|differ|fits|fit\b|support|correspond|igual|semejan|coincid|compar|difer|apoya|ambos|ambas|los dos|las dos|tambien|corresponde|encaja|mism/;
+    const movementCue=/\b(?:sink\w*|sank|sunk|fall\w*|fell|down|bottom|drop\w*|lower\w*|ris\w*|rose|float\w*|up|upward|stayed|nothing|hund\w*|baj\w*|subi\w*|sube\w*|suben|subir|flot\w*|cay\w*|cae\w*|caid\w*|descend\w*|elev\w*|arriba|abajo|fondo|debajo)\b|\b(?:no se movio|no hizo nada|did not move|didnt move|didn't move)\b/;
+    const densityCompareCue=/denser|more dense|less dense|heav|light|more|less|high|low|greater|small|larger|than|compared|sink|sank|sunk|rise|rose|float|mas|menos|mayor|menor|pesad|liger|mas dens|menos dens|hund|baj|sub|flot|compar|supera|superior|inferior/;
+    const scienceCue=/dens|denc|heav|light|mass|weight|weigh|pesa|peso|pesad|liger|masa/;
+    // These are deliberately broad clues, not a grammar checker or a science grader.
+    const sentenceVerb=/\b(?:am|is|are|was|were|be|been|has|have|had|do|does|did|can|could|would|will|may|might|must|should|think|thought|believe|guess|suspect|seem|seems|see|sees|saw|look|looks|looked|find|finds|found|observe|observed|noticed|notice|show|shows|showed|say|says|said|tell|tells|told|read|reads|match|matches|matched|change|changes|changed|get|gets|got|grow|grows|grew|increase|increases|increased|increse|increas|become|becomes|became|burst|bursts|make|makes|made|pop|pops|popped|explode|explodes|exploded|stay|stays|stayed|remain|remains|remained|sink|sinks|sank|sunk|fall|falls|fell|move|moves|moved|float|floats|floated|rise|rises|rose|prove|proves|proved|explain|explains|explained|support|supports|supported|mean|means|meant|compare|compares|compared|cause|causes|caused|fit|fits|contain|contains|contained|produce|produces|produced|exist|exists|work|works|work|react|reacts|happen|happens|happened|go|goes|went|come|comes|came|es|son|era|eran|fue|fueron|esta|estan|estaba|estaban|hay|tiene|tienen|tenia|tenian|puede|pueden|pudo|pudieron|podria|podrian|pudiera|debe|deben|sera|seria|serian|pienso|pense|creo|crei|supongo|considero|opino|sospecho|parece|observamos|observe|observa|vimos|vi|veo|ve|vemos|encontre|encontramos|encontro|encuentro|encuentra|encuentran|dice|dijo|muestra|muestran|mostro|mostraron|indica|indican|indico|hizo|hicimos|hicieron|hace|hacen|hago|aumento|aumenta|aumentan|aumentaron|aumentaba|crecio|crece|crecieron|brillo|brilla|brillaba|brillaron|ilumino|estallo|exploto|explotaron|explota|revento|trono|apago|apaga|hundio|hunde|hunden|hundieron|bajo|baja|bajan|bajaron|subio|sube|suben|subieron|floto|flota|flotan|flotaron|cayo|cae|siguio|significa|significo|prueba|prueban|demuestra|demuestran|explica|explican|compara|comparan|coincide|coinciden|coincidio|corresponde|apoya|apoyan|representa|permite|deja|queda|quedo|quedaron|mantiene|mantuvo|movio|movieron|movia|mueve|salio|salieron|va|van|iba|produce|produjo|reacciona|funciona|existe|contiene|ser|sea|pudiese)\b|\b(?:it|that|there|he|she)['’]s\b|\b(?:we|they|you)['’]re\b|\bi['’]m\b/;
+    const unfinishedEnding=/\b(?:am|is|are|was|were|be|been|can|could|would|will|may|might|must|should|because|and|but|or|that|when|where|than|to|from|with|in|on|of|the|es|son|era|eran|esta|estan|tiene|tienen|puede|pueden|podria|seria|ser|sea|porque|y|o|que|cuando|donde|con|de|en|por|para|el|la|un|una)\s*[.!?¡¿…]*$/;
+    function looksLikeSentence(text){
+      const words=text.match(/[a-z0-9]+(?:['’][a-z]+)?/g)||[];
+      const moreVerbs=/\b(?:shot|blew|prende|prendio|prenden|avivo|aviva|encendio|encendieron|apagaron|semeja|asemeja|asemejan|percibi|percibimos)\b/;
+      return words.length>=2&&(sentenceVerb.test(text)||moreVerbs.test(text))&&!unfinishedEnding.test(text);
+    }
+    function basicIssue(key,raw) {
+      const text=normalized(raw).trim();
+      if(!text)return 'emptyCheck';
+      if(key==='claim' && !gasMention(text))return 'gasCheck';
+      if((key==='flameResult'||key==='flameChart') && !flameCue.test(text))return 'flameCheck';
+      if((key==='experimentSource'||key==='chartSource') && !sourceCue.test(text))return 'sourceCheck';
+      if(key==='flameReason' && (!comparisonCue.test(text)||(text.match(/[a-z0-9]+/g)||[]).length<2))return 'comparisonCheck';
+      if(key==='densityResult' && !movementCue.test(text)&&!(scienceCue.test(text)&&densityCompareCue.test(text)))return 'movementCheck';
+      if(key==='densityChart' && !movementCue.test(text)&&!(scienceCue.test(text)&&densityCompareCue.test(text)))return 'densityCompareCheck';
+      if(key==='densityReason'){
+        if(!scienceCue.test(text))return 'densityIdeaCheck';
+        if(!movementCue.test(text))return 'densityMovementCheck';
+        if(!densityLinkCue.test(text)&&!gasMention(text,true))return 'densityLinkCheck';
+      }
+      if(!looksLikeSentence(text))return key==='claim'?'claimSentenceCheck':'sentenceCheck';
+      return null;
+    }
+
+    const byId = id => document.getElementById(id);
+    const stepList=byId('stepList'), fieldsEl=byId('fields'), preview=byId('previewText');
+    let state={lang:'en',step:0,answers:{},confirmed:{}};
+    let shownAnswers={}, transitionBusy=false;
+    let storageAvailable=true, currentIssue=null;
+    let activeRecognition=null, recognitionField=null, isReading=null, currentUtterance=null;
+    const SpeechRecognitionClass=window.SpeechRecognition||window.webkitSpeechRecognition;
+    const localVoiceAvailability={};
+    const canUseLocalVoice=(()=>{try{return !!SpeechRecognitionClass&&typeof SpeechRecognitionClass.available==='function'&&'processLocally' in new SpeechRecognitionClass();}catch(_){return false;}})();
+    function voiceLanguage(){return state.lang==='es'?'es-US':'en-US';}
+    function voiceOptions(lang){return {langs:[lang],processLocally:true,quality:'dictation'};}
+    function updateVoiceSetup(){
+      const availability=localVoiceAvailability[voiceLanguage()];
+      fieldsEl.querySelectorAll('.voice-setup').forEach(button=>{
+        const status=button.previousElementSibling;
+        if(!status||status.dataset.voiceError!=='network')return;
+        if(availability==='available'){status.textContent=t().micLocalRetry;status.classList.remove('error');button.hidden=true;}
+        else button.hidden=!(availability==='downloadable'&&typeof SpeechRecognitionClass.install==='function');
+      });
+    }
+    function checkLocalVoice(lang){
+      if(!canUseLocalVoice||localVoiceAvailability[lang])return;
+      localVoiceAvailability[lang]='checking';
+      try{Promise.resolve(SpeechRecognitionClass.available(voiceOptions(lang))).then(result=>{
+        localVoiceAvailability[lang]=result;updateVoiceSetup();
+      }).catch(()=>{localVoiceAvailability[lang]='unavailable';});}
+      catch(_){localVoiceAvailability[lang]='unavailable';}
+    }
+    async function installLocalVoice(area,status,button){
+      const lang=voiceLanguage();button.disabled=true;status.textContent=t().micLocalDownloading;status.classList.remove('error');
+      try{
+        const installed=await SpeechRecognitionClass.install(voiceOptions(lang));
+        if(!installed)throw new Error('Voice language pack unavailable');
+        localVoiceAvailability[lang]='available';status.dataset.voiceError='';status.textContent=t().micLocalReady;button.hidden=true;
+      }catch(_){status.dataset.voiceError='';status.textContent=t().micLocalSetupFailed;status.classList.add('error');button.hidden=true;}
+      button.disabled=false;area.focus();
+    }
+    function load(){
+      try{
+        const raw=localStorage.getItem(STORAGE_KEY);
+        if(raw){const saved=JSON.parse(raw);if(saved&&typeof saved==='object'){
+          state.lang=saved.lang==='es'?'es':'en';
+          state.step=Number.isInteger(saved.step)?Math.max(0,Math.min(steps.length-1,saved.step)):0;
+          if(saved.answers&&typeof saved.answers==='object')for(const key of fieldOrder)if(typeof saved.answers[key]==='string')state.answers[key]=saved.answers[key];
+          if(saved.confirmed&&typeof saved.confirmed==='object'){
+            for(const key of fieldOrder)if(saved.confirmed[key]===value(key)&&!basicIssue(key,value(key)))state.confirmed[key]=value(key);
+          }else{
+            // Preserve valid work from versions that displayed answers as students typed.
+            for(const key of fieldOrder)if(!basicIssue(key,value(key)))state.confirmed[key]=value(key);
+          }
+          shownAnswers={...state.confirmed};
+        }}
+        const test=STORAGE_KEY+'-check';localStorage.setItem(test,'ok');localStorage.removeItem(test);
+      }catch(_){storageAvailable=false;}
+    }
+    function save(){if(storageAvailable){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(_){storageAvailable=false;}}renderSave();}
+    function t(){return translations[state.lang];}
+    function value(key){return typeof state.answers[key]==='string'?state.answers[key]:'';}
+    function has(key){return value(key).trim().length>0;}
+    function issueFor(key){return basicIssue(key,value(key));}
+    function ready(key){return state.confirmed[key]===value(key)&&has(key)&&!issueFor(key);}
+    function stepDone(step){return step.fields.every(field=>ready(field.key));}
+    function getStep(key){return steps.findIndex(s=>s.fields.some(f=>f.key===key));}
+    function checklistStatus(){const status={};fieldOrder.forEach(key=>{status[key]=ready(key);});return status;}
+    function renderSave(){const el=byId('saveStatus');el.textContent=storageAvailable?t().saved:t().unsaved;el.classList.toggle('warning',!storageAvailable);}
+    function renderReadButtons(){
+      const available=!!window.speechSynthesis&&typeof window.SpeechSynthesisUtterance==='function';
+      for(const type of ['question','starters','argument']){
+        const b=byId(type==='question'?'speakQuestionBtn':type==='starters'?'speakStartersBtn':'speakArgumentBtn');
+        const reading=isReading===type;
+        b.textContent=reading?'■ '+t().stopReading:'🔊 '+(type==='question'?t().readQuestion:type==='starters'?t().readStarters:t().readArgument);
+        b.disabled=!available||(type==='argument'&&!getArgument());
+        b.title=available?'':t().readUnavailable;
+        b.classList.toggle('reading',reading);
+        b.setAttribute('aria-pressed',reading?'true':'false');
+      }
+    }
+    function renderStatic(){
+      document.documentElement.lang=state.lang;
+      document.title=state.lang==='en'?'Elephant Toothpaste CER Builder':'Creador de CER: pasta de dientes de elefante';
+      document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t()[el.dataset.i18n];});
+      const language=byId('languageBtn');language.textContent=state.lang==='en'?'Español':'English';language.lang=state.lang==='en'?'es':'en';language.setAttribute('aria-label',t().languageLabel);
+      stepList.setAttribute('aria-label',t().navLabel);document.querySelector('.sidebar').setAttribute('aria-label',t().sideLabel);document.querySelector('.mission').setAttribute('aria-label',t().missionAria);
+      renderSave();renderReadButtons();
+    }
+    function renderSteps(){
+      stepList.replaceChildren();
+      steps.forEach((step,index)=>{
+        const b=document.createElement('button');b.type='button';b.className='step'+(index===state.step?' active':'')+(stepDone(step)?' done':'');b.textContent=String(index+1);
+        b.setAttribute('aria-label',t().question+' '+(index+1)+': '+step[state.lang].title+(stepDone(step)?' ('+t().answered+')':''));
+        if(index===state.step)b.setAttribute('aria-current','step');b.addEventListener('click',()=>attemptGo(index));stepList.appendChild(b);
+      });
+    }
+    function makeMicButton(key,area,status,setup){
+      const button=document.createElement('button');button.type='button';button.className='tool-btn mic-btn';button.textContent='🎙 '+t().mic;
+      button.setAttribute('aria-pressed','false');button.setAttribute('aria-label',t().mic+': '+(area.getAttribute('aria-label')||t().answer));
+      button.disabled=!SpeechRecognitionClass;button.title=button.disabled?t().micUnavailable:'';
+      button.addEventListener('click',()=>toggleRecognition(key,area,status,button,setup));
+      return button;
+    }
+    function renderQuestion(focusKey){
+      const step=steps[state.step], copy=step[state.lang];
+      byId('stepTag').textContent=step.tag[state.lang];byId('questionTitle').textContent=copy.title;byId('questionHelp').textContent=copy.help;
+      fieldsEl.replaceChildren();
+      step.fields.forEach(field=>{
+        const wrapper=document.createElement('div');wrapper.className='field'+(field.source?' source-field':'');
+        const row=document.createElement('div');row.className='field-top';
+        const label=document.createElement('label');label.className='field-label';label.htmlFor='field-'+field.key;label.textContent=field.source?copy.sourceLabel:(copy.label||t().answer);
+        const area=document.createElement('textarea');area.id='field-'+field.key;area.value=value(field.key);area.placeholder=field.source?t().sourcePlaceholder:t().placeholder;
+        area.setAttribute('aria-label',label.textContent);area.rows=field.source?2:4;area.spellcheck=true;
+        const status=document.createElement('div');status.className='voice-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+        const setup=document.createElement('button');setup.type='button';setup.className='tool-btn voice-setup';setup.textContent=t().micLocalSetup;setup.hidden=true;
+        setup.addEventListener('click',()=>installLocalVoice(area,status,setup));
+        const mic=makeMicButton(field.key,area,status,setup);row.append(label,mic);
+        area.addEventListener('input',()=>{
+          state.answers[field.key]=area.value;delete state.confirmed[field.key];delete shownAnswers[field.key];
+          byId('copyMessage').className='copy-message';
+          if(currentIssue&&currentIssue.key===field.key){
+            const remaining=issueFor(field.key);if(!remaining)hideWarning();else byId('validationText').textContent=t()[remaining];
+          }
+          save();renderSteps();renderChecklist();renderPreview();
+        });
+        wrapper.append(row,area,status,setup);fieldsEl.appendChild(wrapper);
+      });
+      byId('voicePrivacy').textContent=SpeechRecognitionClass?t().micPrivacy:t().micUnavailable;
+      const starterList=byId('starterList');starterList.replaceChildren();copy.starters.forEach(s=>{const li=document.createElement('li');li.textContent=s;starterList.appendChild(li);});
+      const prev=byId('previousBtn');prev.textContent=t().back;prev.disabled=state.step===0;
+      byId('nextBtn').textContent=state.step===steps.length-1?t().review:t().next;
+      if(focusKey){const el=byId('field-'+focusKey);if(el)el.focus();}
+      renderReadButtons();
+    }
+    function renderChecklist(before){
+      const container=byId('checklist');container.replaceChildren();let doneCount=0;
+      checklist.forEach(item=>{
+        const answered=item.fields.filter(ready).length,done=answered===item.fields.length;
+        const changed=before&&item.fields.some(key=>ready(key)&&!before[key]);
+        if(done)doneCount++;const related=item.fields.some(key=>getStep(key)===state.step);
+        const button=document.createElement('button');button.type='button';
+        button.className='check-item'+(done?' done':'')+(related?' related':'')+(changed?' pulse':'');
+        button.setAttribute('aria-label',item[state.lang]+' '+answered+'/'+item.fields.length+'. '+t().edit+'.');
+        const label=document.createElement('span');label.className='check-text';label.textContent=item[state.lang];
+        const indicators=document.createElement('span');indicators.className='check-indicators';indicators.setAttribute('aria-hidden','true');
+        item.fields.forEach(key=>{
+          const icon=document.createElement('span');const isReady=ready(key);
+          icon.className='check-icon'+(isReady?' checked':'')+(before&&isReady&&!before[key]?' just-checked':'');
+          icon.textContent='✓';icon.title=fieldNames[key][state.lang];icon.dataset.field=key;indicators.appendChild(icon);
+        });
+        const count=document.createElement('span');count.className='check-count';count.textContent=answered+'/'+item.fields.length;
+        button.append(label,indicators,count);
+        button.addEventListener('click',event=>{const icon=event.target.closest('.check-icon');const key=(icon&&icon.dataset.field)||item.fields.find(k=>!ready(k))||item.fields[0];attemptGo(getStep(key),key);});
+        container.appendChild(button);
+      });
+      byId('checklistBadge').textContent=doneCount+' / '+checklist.length;
+    }
+    function getArgument(){return fieldOrder.map(key=>(shownAnswers[key]||'').trim()).filter(Boolean).join(' ');}
+    function renderPreview(revealKeys){
+      const revealed=new Set(revealKeys||[]),card=byId('previewCard');
+      card.classList.remove('argument-arrived');
+      preview.replaceChildren();let any=false;
+      fieldOrder.forEach(key=>{
+        const text=(shownAnswers[key]||'').trim();if(!text)return;if(any)preview.appendChild(document.createTextNode(' '));
+        const button=document.createElement('button');button.type='button';button.className='answer-piece'+(getStep(key)===state.step?' selected':'')+(revealed.has(key)?' reveal':'');
+        button.textContent=text;button.setAttribute('aria-label',t().edit+' '+(getStep(key)+1)+': '+text);
+        button.addEventListener('click',()=>attemptGo(getStep(key),key));preview.appendChild(button);any=true;
+      });
+      if(!any){const p=document.createElement('p');p.className='preview-empty';p.textContent=t().empty;preview.appendChild(p);}
+      byId('copyBtn').disabled=!any;const msg=byId('copyMessage');if(!msg.classList.contains('success')&&!msg.classList.contains('error'))msg.textContent=any?t().copyHint:'';
+      if(revealed.size){void card.offsetWidth;card.classList.add('argument-arrived');}
+      renderReadButtons();
+    }
+    function flushPreview(){renderPreview();}
+    function hideWarning(){currentIssue=null;byId('validation').hidden=true;document.querySelectorAll('textarea[aria-invalid]').forEach(el=>{el.removeAttribute('aria-invalid');el.classList.remove('shake-answer');});}
+    function renderAll(focusKey,revealKeys){renderStatic();renderSteps();renderQuestion(focusKey);renderChecklist();renderPreview(revealKeys);}
+    function stopReading(){currentUtterance=null;if(window.speechSynthesis)window.speechSynthesis.cancel();isReading=null;renderReadButtons();}
+    function showVoiceMessage(message,isError){
+      const status=fieldsEl.querySelector('.voice-status');if(status){status.textContent=message;status.classList.toggle('error',!!isError);}
+    }
+    function voiceBlocksNavigation(){if(!activeRecognition)return false;showVoiceMessage(t().micFirst,true);return true;}
+    function go(index,key,revealKeys){
+      if(transitionBusy||voiceBlocksNavigation())return;
+      stopReading();hideWarning();state.step=Math.max(0,Math.min(index,steps.length-1));save();renderAll(key,revealKeys);
+    }
+    function firstIssueThrough(last){
+      for(let i=0;i<=last;i++)for(const field of steps[i].fields){const issue=issueFor(field.key);if(issue)return {index:i,key:field.key,code:issue};}
+      return null;
+    }
+    function showWarning(issue){
+      stopReading();state.step=issue.index;save();renderAll(issue.key);
+      currentIssue=issue;byId('validationTitle').textContent=t().checkTitle;byId('validationText').textContent=t()[issue.code];
+      byId('validation').hidden=false;
+      const area=byId('field-'+issue.key);if(area){area.setAttribute('aria-invalid','true');area.classList.remove('shake-answer');void area.offsetWidth;area.classList.add('shake-answer');}
+    }
+    function commitThrough(last,done){
+      if(transitionBusy)return;
+      const keys=steps.slice(0,last+1).flatMap(step=>step.fields.map(field=>field.key)).filter(key=>!ready(key)&&!issueFor(key));
+      if(!keys.length){done([]);return;}
+      stopReading();hideWarning();const before=checklistStatus();
+      keys.forEach(key=>{state.confirmed[key]=value(key);});
+      renderSteps();renderChecklist(before);
+      transitionBusy=true;
+      const controls=Array.from(document.querySelectorAll('button,textarea'));
+      const wasDisabled=controls.map(control=>control.disabled);
+      controls.forEach(control=>{control.disabled=true;});
+      byId('nextBtn').textContent=t().adding;
+      setTimeout(()=>{
+        keys.forEach(key=>{shownAnswers[key]=state.confirmed[key];});
+        controls.forEach((control,index)=>{control.disabled=wasDisabled[index];});
+        transitionBusy=false;save();done(keys);
+      },1150);
+    }
+    function attemptGo(index,key){
+      if(transitionBusy||voiceBlocksNavigation())return;
+      const target=Math.max(0,Math.min(index,steps.length-1));
+      if(target>state.step){
+        const issue=firstIssueThrough(target-1);if(issue){showWarning(issue);return;}
+        commitThrough(target-1,keys=>go(target,key,keys));return;
+      }
+      go(target,key);
+    }
+    function attemptReview(){
+      if(transitionBusy||voiceBlocksNavigation())return;
+      const issue=firstIssueThrough(steps.length-1);if(issue){showWarning(issue);return;}
+      commitThrough(steps.length-1,keys=>{stopReading();hideWarning();renderAll(undefined,keys);byId('previewCard').focus();byId('previewCard').scrollIntoView({behavior:'smooth',block:'nearest'});});
+    }
+    function toggleReading(type){
+      if(!window.speechSynthesis||typeof window.SpeechSynthesisUtterance!=='function')return;
+      if(activeRecognition){showVoiceMessage(t().readFirst,true);return;}
+      if(isReading===type){stopReading();return;}
+      stopReading();
+      let text='';
+      if(type==='question'){
+        const step=steps[state.step],copy=step[state.lang];
+        text=copy.title+'. '+copy.help+'. '+step.fields.map(f=>f.source?copy.sourceLabel:(copy.label||t().answer)).join('. ');
+      }else if(type==='starters')text=steps[state.step][state.lang].starters.join('. ');
+      else text=getArgument();
+      if(!text)return;
+      const utterance=new SpeechSynthesisUtterance(text);utterance.lang=state.lang==='es'?'es-US':'en-US';utterance.rate=0.95;
+      const voices=window.speechSynthesis.getVoices();const voice=voices.find(v=>v.lang.toLowerCase().startsWith(state.lang));if(voice)utterance.voice=voice;
+      currentUtterance=utterance;isReading=type;renderReadButtons();
+      utterance.onend=()=>{if(currentUtterance===utterance){currentUtterance=null;isReading=null;renderReadButtons();}};
+      utterance.onerror=()=>{if(currentUtterance===utterance){currentUtterance=null;isReading=null;renderReadButtons();}};
+      window.speechSynthesis.speak(utterance);
+    }
+    function toggleRecognition(key,area,status,button,setup){
+      if(!SpeechRecognitionClass){status.textContent=t().micUnavailable;status.classList.add('error');return;}
+      if(activeRecognition){
+        if(recognitionField===key){button.textContent=t().stopping;button.disabled=true;try{activeRecognition.stop();}catch(_){activeRecognition=null;recognitionField=null;button.disabled=false;}}
+        else{status.textContent=t().micFirst;status.classList.add('error');}
+        return;
+      }
+      stopReading();
+      const recognition=new SpeechRecognitionClass();activeRecognition=recognition;recognitionField=key;
+      recognition.lang=voiceLanguage();recognition.continuous=true;recognition.interimResults=false;
+      const useLocal=canUseLocalVoice&&localVoiceAvailability[recognition.lang]==='available';
+      if(useLocal)recognition.processLocally=true;
+      status.dataset.voiceError='';setup.hidden=true;
+      let hadError=false;
+      recognition.onstart=()=>{button.textContent='■ '+t().stopMic;button.classList.add('listening');button.setAttribute('aria-pressed','true');button.setAttribute('aria-label',t().stopMic+': '+(area.getAttribute('aria-label')||t().answer));status.textContent=t().micListening;status.classList.remove('error');};
+      recognition.onresult=event=>{
+        for(let i=event.resultIndex;i<event.results.length;i++){
+          if(!event.results[i].isFinal)continue;
+          const text=String(event.results[i][0].transcript||'').trim();if(!text)continue;
+          const at=typeof area.selectionStart==='number'?area.selectionStart:area.value.length;
+          const end=typeof area.selectionEnd==='number'?area.selectionEnd:at;
+          const prefix=at>0&&!/\s/.test(area.value.charAt(at-1))?' ':'';
+          const suffix=end<area.value.length&&!/\s/.test(area.value.charAt(end))?' ':'';
+          area.setRangeText(prefix+text+suffix,at,end,'end');area.dispatchEvent(new Event('input',{bubbles:true}));
+        }
+      };
+      recognition.onerror=event=>{
+        hadError=true;let message=t().micError;
+        if(useLocal&&(event.error==='language-not-supported'||event.error==='service-not-allowed'||event.error==='network')){
+          localVoiceAvailability[recognition.lang]='unavailable';message=t().micLocalFailed;
+        }
+        else if(event.error==='not-allowed')message=t().micDenied;
+        else if(event.error==='audio-capture')message=t().micNoMic;
+        else if(event.error==='no-speech')message=t().micNoSpeech;
+        else if(event.error==='network'){message=t().micNetwork;status.dataset.voiceError='network';}
+        status.textContent=message;status.classList.add('error');updateVoiceSetup();
+      };
+      recognition.onend=()=>{
+        if(activeRecognition===recognition){activeRecognition=null;recognitionField=null;}
+        button.disabled=false;button.textContent='🎙 '+t().mic;button.classList.remove('listening');button.setAttribute('aria-pressed','false');button.setAttribute('aria-label',t().mic+': '+(area.getAttribute('aria-label')||t().answer));
+        if(!hadError){status.textContent=t().micStopped;status.classList.remove('error');}
+      };
+      try{area.focus();recognition.start();}catch(_){activeRecognition=null;recognitionField=null;status.textContent=t().micError;status.classList.add('error');}
+    }
+    byId('previousBtn').addEventListener('click',()=>{if(state.step>0)go(state.step-1,steps[state.step-1].fields[0].key);});
+    byId('nextBtn').addEventListener('click',()=>{if(state.step<steps.length-1)attemptGo(state.step+1,steps[state.step+1].fields[0].key);else attemptReview();});
+    byId('languageBtn').addEventListener('click',()=>{if(voiceBlocksNavigation())return;stopReading();hideWarning();flushPreview();state.lang=state.lang==='en'?'es':'en';save();byId('copyMessage').className='copy-message';renderAll();checkLocalVoice(voiceLanguage());});
+    byId('resetBtn').addEventListener('click',()=>{if(voiceBlocksNavigation())return;if(!window.confirm(t().confirm))return;stopReading();hideWarning();state.answers={};state.confirmed={};shownAnswers={};state.step=0;byId('copyMessage').className='copy-message';save();renderAll('claim');});
+    byId('speakQuestionBtn').addEventListener('click',()=>toggleReading('question'));
+    byId('speakStartersBtn').addEventListener('click',()=>toggleReading('starters'));
+    byId('speakArgumentBtn').addEventListener('click',()=>toggleReading('argument'));
+    function attemptCopy(){
+      if(transitionBusy||voiceBlocksNavigation())return;
+      const issue=firstIssueThrough(steps.length-1);if(issue){showWarning(issue);return;}
+      commitThrough(steps.length-1,keys=>finishCopy(keys));
+    }
+    async function finishCopy(keys){
+      if(keys.length)renderAll(undefined,keys);
+      const text=getArgument(),msg=byId('copyMessage');if(!text)return;let copied=false;
+      try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);copied=true;}}catch(_){}
+      if(!copied){const temp=document.createElement('textarea');temp.value=text;temp.style.position='fixed';temp.style.opacity='0';document.body.appendChild(temp);temp.focus();temp.select();try{copied=document.execCommand('copy');}catch(_){}temp.remove();}
+      msg.className='copy-message '+(copied?'success':'error');msg.textContent=copied?t().copied:t().copyFailed;
+      if(!copied){const range=document.createRange();range.selectNodeContents(preview);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);}
+    }
+    byId('copyBtn').addEventListener('click',attemptCopy);
+    load();renderAll();checkLocalVoice(voiceLanguage());
+  })();
+  </script>
+</body>
+</html>
